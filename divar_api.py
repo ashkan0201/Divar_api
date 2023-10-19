@@ -17,8 +17,7 @@ for link in soup.find_all("a"):
     href = link.get("href")
     if "/s/tehran/rent-apartment/" in href:
         href = href.replace("/s/tehran/rent-apartment/","")
-        search = re.search("[\S]+\?", href)
-        names.append(search.group())
+        names.append(href)
 
 def search(event=None):
     search_text = combo.get().lower()
@@ -51,7 +50,7 @@ def api():
     shamsi_year = JalaliDate.today().year
     driver = webdriver.Firefox()
     while state:
-        get_name = f"https://divar.ir/s/tehran/rent-apartment/{selected_item}size={value1}-{value2}&building-age=0-30&user_type=agency&sort=sort_date&page={page}"
+        get_name = f"https://divar.ir/s/tehran/rent-apartment/{selected_item}?size={value1}-{value2}&building-age=0-30&user_type=agency&sort=sort_date&page={page}"
         driver.get(get_name)
         a_elements = driver.find_elements_by_tag_name("a")
 
@@ -81,6 +80,16 @@ def api():
                 translation_table = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
                 english_number = number.translate(translation_table)
                 return english_number
+
+            keyword = '۲ هفته'
+            found = False
+            try:
+                element = driver.find_element_by_xpath(f"//*[contains(text(), '{keyword}')]")
+            except:
+                pass
+            else:
+                links = []
+                raise
 
             try:
                 element_of_text = driver.find_elements_by_class_name("kt-unexpandable-row__value")
@@ -190,7 +199,7 @@ def api():
             except:
                 pass
         except:
-            links.append(links[0])
+            pass
         else:
             links.remove(links[0])
         
