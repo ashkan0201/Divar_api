@@ -68,8 +68,8 @@ def api():
     while True:
         try:
             timer1 += 1
-            if timer1 == 20:
-                sleep(randint(10,15))
+            if timer1 == 10:
+                sleep(randint(5,10))
                 timer1 = 0
 
             driver.get(links[0])
@@ -82,13 +82,21 @@ def api():
                 return english_number
 
             keyword = '۲ هفته'
-            found = False
             try:
                 element = driver.find_element_by_xpath(f"//*[contains(text(), '{keyword}')]")
             except:
                 pass
             else:
                 links = []
+                raise
+
+            keyword1 = 'این راه به جایی نمی‌رسد!'
+            try:
+                element1 = driver.find_element_by_xpath(f"//*[contains(text(), '{keyword1}')]")
+            except:
+                pass
+            else:
+                links.remove(links[0])
                 raise
 
             try:
@@ -136,18 +144,20 @@ def api():
                             demo_datails.append(int(english_number))
                         else:
                             demo_datails.append(int(english_number))
+                    print(demo_datails)
                     size = demo_datails[0]
                     year = shamsi_year - demo_datails[1]
                     vadieh = demo_datails[2]
+
                     if demo_datails[3] == "*":
                         ejareh = "*"
                     else:
                         ejareh = demo_datails[3]
-
-                    if "*" in details:
-                        result = vadieh / size
-                    else:
-                        result = (((ejareh/3)*100) + vadieh) / size
+                    if vadieh != "*":
+                        if "*" in details:
+                            result = vadieh / size
+                        else:
+                            result = (((ejareh/3)*100) + vadieh) / size
 
                 else:
                     elements_of_text_item = driver.find_elements_by_class_name("kt-group-row-item__value")
@@ -212,28 +222,36 @@ def api():
     elif len(year_0_until_5) == 1:
         index1 = max(year_0_until_5)
     else:
-        index1 = f"{min(year_0_until_5)}_{max(year_0_until_5)}"
+        max_ = max(year_0_until_5)
+        year_0_until_5.remove(max_) 
+        index1 = f"{int(sum(year_0_until_5)/len(year_0_until_5))}_{max_}"
 
     if len(year_6_until_10) == 0:
         index2 = "-"
     elif len(year_6_until_10) == 1:
         index2 = max(year_6_until_10)
     else:
-        index2 = f"{min(year_6_until_10)}_{max(year_6_until_10)}"
+        max_ = max(year_6_until_10)
+        year_6_until_10.remove(max_) 
+        index2 = f"{int(sum(year_6_until_10)/len(year_6_until_10))}_{max_}"
 
     if len(year_11_until_20) == 0:
         index3 = "-"
     elif len(year_11_until_20) == 1:
         index3 = max(year_11_until_20)
     else:
-        index3 = f"{min(year_11_until_20)}_{max(year_11_until_20)}"
+        max_ = max(year_11_until_20)
+        year_11_until_20.remove(max_)
+        index3 = f"{int(sum(year_11_until_20)/len(year_11_until_20))}_{max_}"
     
     if len(year_21_until_30) == 0:
         index4 = "-"
     elif len(year_21_until_30) == 1:
         index4 = max(year_21_until_30)
     else:
-        index4 = f"{min(year_21_until_30)}_{max(year_21_until_30)}"
+        max_ = max(year_21_until_30)
+        year_21_until_30.remove(max_)
+        index4 = f"{int(sum(year_21_until_30)/len(year_21_until_30))}_{max_}"
     
     lst = [selected_item, f"{value1} until {value2}", time, index1, index2, index3, index4]
     with open("output.csv", 'a', newline='') as file:
